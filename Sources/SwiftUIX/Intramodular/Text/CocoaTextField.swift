@@ -188,8 +188,11 @@ fileprivate struct _CocoaTextField<Label: View>: UIViewRepresentable {
         
         
         if context.environment.isEnabled {
-            DispatchQueue.main.async {
-                if (configuration.isInitialFirstResponder ?? configuration.isFocused?.wrappedValue) ?? false {
+            DispatchQueue.main.async {[weak uiView] in
+                guard let uiView = uiView else { return }
+                guard uiView.window != nil else { return }
+                guard (configuration.isInitialFirstResponder ?? configuration.isFocused?.wrappedValue) ?? false else { return }
+                if !uiView.isFirstResponder {
                     uiView.becomeFirstResponder()
                 }
             }
@@ -273,14 +276,16 @@ fileprivate struct _CocoaTextField<Label: View>: UIViewRepresentable {
         }
 
         updateResponderChain: do {
-            DispatchQueue.main.async {
-                if let isFocused = configuration.isFocused, uiView.window != nil {
+            DispatchQueue.main.async { [weak uiView] in
+                guard let uiView = uiView else { return }
+                guard uiView.window != nil else { return }
+                if let isFocused = configuration.isFocused {
                     if isFocused.wrappedValue && !uiView.isFirstResponder {
                         uiView.becomeFirstResponder()
                     } else if !isFocused.wrappedValue && uiView.isFirstResponder {
                         uiView.resignFirstResponder()
                     }
-                } else if let isFirstResponder = configuration.isFirstResponder, uiView.window != nil {
+                } else if let isFirstResponder = configuration.isFirstResponder {
                     if isFirstResponder && !uiView.isFirstResponder, context.environment.isEnabled {
                         uiView.becomeFirstResponder()
                     } else if !isFirstResponder && uiView.isFirstResponder {
