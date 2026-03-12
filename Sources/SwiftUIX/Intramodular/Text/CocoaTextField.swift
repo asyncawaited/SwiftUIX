@@ -83,7 +83,7 @@ public struct CocoaTextField<Label: View>: View {
         ZStack(
             alignment: Alignment(
                 horizontal: .init(from: multilineTextAlignment),
-                vertical: .top
+                vertical: .center
             )
         ) {
             if configuration.placeholder == nil {
@@ -226,6 +226,7 @@ fileprivate struct _CocoaTextField<Label: View>: UIViewRepresentable {
             uiView.autocorrectionType = context.environment.disableAutocorrection.map({ $0 ? .no : .yes }) ?? .default
             uiView.borderStyle = configuration.borderStyle
             uiView.clearButtonMode = configuration.clearButtonMode ?? .never
+            uiView.contentVerticalAlignment = .center
             uiView.enablesReturnKeyAutomatically = configuration.enablesReturnKeyAutomatically ?? false
             uiView.font = try? configuration.uiFont ?? context.environment.font?.toAppKitOrUIKitFont() ?? uiView.font
             uiView.isSecureTextEntry = configuration.secureTextEntry ?? false
