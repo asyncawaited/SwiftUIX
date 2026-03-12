@@ -631,6 +631,10 @@ private final class PlatformTextField: UITextField {
         
         return editingRect?(bounds, original) ?? original
     }
+
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
+        textRect(forBounds: bounds)
+    }
     
     override func clearButtonRect(forBounds bounds: CGRect) -> CGRect {
         let original = super.clearButtonRect(forBounds: bounds)
