@@ -49,6 +49,7 @@ public struct CocoaTextField<Label: View>: View {
         var inputView: AnyView?
         var kerning: CGFloat?
         var placeholder: String?
+        var placeholderColor: UIColor?
         var smartDashesType: UITextSmartDashesType?
         var smartQuotesType: UITextSmartQuotesType?
         var spellCheckingType: UITextSpellCheckingType?
@@ -89,6 +90,7 @@ public struct CocoaTextField<Label: View>: View {
             if configuration.placeholder == nil {
                 label
                     .font(configuration.uiFont.map(Font.init) ?? font)
+                    .foregroundColor(configuration.placeholderColor.map(Color.init))
                     .opacity(text.wrappedValue.isEmpty ? 1.0 : 0.0)
             }
             
@@ -254,6 +256,7 @@ fileprivate struct _CocoaTextField<Label: View>: UIViewRepresentable {
                     string: placeholder,
                     attributes: [
                         .font: try? configuration.uiFont ?? context.environment.font?.toAppKitOrUIKitFont() ?? uiView.font,
+                        .foregroundColor: configuration.placeholderColor,
                         .paragraphStyle: NSMutableParagraphStyle().then {
                             $0.alignment = .init(context.environment.multilineTextAlignment)
                         }
@@ -463,6 +466,15 @@ extension CocoaTextField {
     
     public func placeholder(_ placeholder: String) -> Self {
         then({ $0.configuration.placeholder = placeholder })
+    }
+    
+    public func placeholderColor(_ placeholderColor: Color?) -> Self {
+        then({ $0.configuration.placeholderColor = placeholderColor?.toUIColor() })
+    }
+    
+    @_disfavoredOverload
+    public func placeholderColor(_ placeholderColor: UIColor?) -> Self {
+        then({ $0.configuration.placeholderColor = placeholderColor })
     }
     
     public func foregroundColor(_ foregroundColor: Color?) -> Self {
