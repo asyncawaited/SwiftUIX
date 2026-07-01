@@ -304,10 +304,18 @@ fileprivate struct _CocoaTextField<Label: View>: UIViewRepresentable {
         _ uiView: UIViewType,
         coordinator: Coordinator
     ) {
-        if let isFocused = coordinator.configuration.isFocused {
-            if isFocused.wrappedValue {
-                isFocused.wrappedValue = false
-            }
+        uiView.isFirstResponderBinding = nil
+        coordinator.configuration.isFocused = nil
+        uiView.delegate = nil
+
+        uiView.removeTarget(
+            coordinator,
+            action: #selector(_CocoaTextField.Coordinator._textFieldDidChanged(_:)),
+            for: .editingChanged
+        )
+
+        if uiView.isFirstResponder {
+            uiView.resignFirstResponder()
         }
     }
     
