@@ -61,7 +61,6 @@ public struct PaginationView<Page: View>: View {
     
     var paginationState: Binding<PaginationState>?
     
-    @inlinable
     public init(
         content: AnyForEach<Page>,
         axis: Axis = .horizontal,
