@@ -50,8 +50,7 @@ public struct PaginationView<Page: View>: View {
     
     /// The current page index internally used by `PaginationView`.
     /// Never access this directly, it is marked public as a workaround to a compiler bug.
-    // `@inlinable` cannot reference `@State`'s private macro-generated storage.
-    @State public var _currentPageIndex = 0
+    @State public var _currentPageIndex: Int
     
     /// Never access this directly, it is marked public as a workaround to a compiler bug.
     @inlinable
@@ -71,6 +70,9 @@ public struct PaginationView<Page: View>: View {
         self.axis = axis
         self.transitionStyle = transitionStyle
         self.showsIndicators = showsIndicators
+        // Avoid Xcode 27 emitting a call to the macro-generated default
+        // initializer with private linkage when archiving a client app.
+        self.__currentPageIndex = State(initialValue: 0)
         
         switch axis {
             case .horizontal:
